@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from torch.utils.data import Dataset, dataloader
+from torch.utils.data import Dataset, DataLoader
 
 class SpriteData(Dataset):
     def __init__(self,split = "train"):
