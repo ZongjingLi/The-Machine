@@ -4,7 +4,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 
 from moic.data_structure import *
-
+# this is the machine
 class Lorl(nn.Module):
     def __init__(self):
         super().__init__()
