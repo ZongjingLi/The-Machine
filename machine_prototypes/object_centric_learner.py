@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 import matplotlib.pyplot as plt
-
+# namomo
 from moic.data_structure import *
 # this is the machine
 class Lorl(nn.Module):
