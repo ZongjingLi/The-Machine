@@ -6,9 +6,15 @@ import matplotlib.pyplot as plt
 from moic.data_structure import *
 # this is the machine
 class Lorl(nn.Module):
-    def __init__(self):
+    def __init__(self,opt):
         super().__init__()
+        self.visual_scene_parser = None
+        self.program_parser = None
+        self.knowledgebase = None
     
+    def perception(self,image):
+        return self.visual_scene_parser(image)
+
     def forward(self,x):
         return x
 
