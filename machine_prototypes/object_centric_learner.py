@@ -14,6 +14,7 @@ class Lorl(nn.Module):
     
     def perception(self,image):
         return self.visual_scene_parser(image)
+        # namomo
 
     def forward(self,x):
         return x
