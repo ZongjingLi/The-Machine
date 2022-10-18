@@ -25,3 +25,9 @@ class RatSkill(nn.Module):
     def isEnd(self,state):return self.end_condition(state)
 
 skill = RatSkill()
+
+class RRT(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self,x):return x
