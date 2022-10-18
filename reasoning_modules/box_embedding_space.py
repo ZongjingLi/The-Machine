@@ -3,4 +3,7 @@ import torch.nn as nn
 
 from melkor_knowledge import *
 
-ConceptBox("namo","color")
+blue = ConceptBox("blue","color")
+red  = ConceptBox("red" ,"color")
+
+e1   = EntityBox(torch.randn([1,100]))
