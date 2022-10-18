@@ -6,11 +6,16 @@ from melkor_logic.NLM.model import *
 
 from config import *
 
+struct_config = (
+    (3,12,3 ),
+    (30,50,20),
+    (20,30,3 ))
+
 class RatSkill(nn.Module):
     def __init__(self,name = "default_name"):
         super().__init__()
         self.name = name
-        self.start_condition = NeuroLogicMachine()
-        self.end_condition = NeuroLogicMachine()
+        self.start_condition = NeuroLogicMachine(struct_config)
+        self.end_condition = NeuroLogicMachine(struct_config)
 
 skill = RatSkill()
