@@ -15,7 +15,9 @@ class QuasiExecutor(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self,x):return x
+    def forward(self,program,context):
+        results = context
+        return results
 
 print(lp)
 
