@@ -18,4 +18,8 @@ class RatSkill(nn.Module):
         self.start_condition = NeuroLogicMachine(struct_config)
         self.end_condition = NeuroLogicMachine(struct_config)
 
+    def isStart(self,state):return self.start_condition(state)
+
+    def isEnd(self,state):return self.end_condition(state)
+
 skill = RatSkill()
