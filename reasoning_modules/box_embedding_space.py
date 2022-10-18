@@ -11,8 +11,14 @@ e2   = EntityBox(torch.randn([1,100]))
 
 lp = logJointVolume(e1,blue,True)
 
+class QuasiExecutor(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self,x):return x
+
 print(lp)
 
-print(calculate_categorical_log_pdf(e1,[blue,red]))
+print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
 
 print(calculate_filter_log_pdf([e1,e2],red))
