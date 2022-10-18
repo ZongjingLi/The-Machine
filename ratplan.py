@@ -24,6 +24,10 @@ class RatSkill(nn.Module):
 
     def isEnd(self,state):return self.end_condition(state)
 
+class FiniteStateRepresent(nn.Module):
+    def __init__(self):
+        super().__init__()
+
 skill = RatSkill()
 
 class RRT(nn.Module):
