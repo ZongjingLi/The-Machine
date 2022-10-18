@@ -35,3 +35,9 @@ class RRT(nn.Module):
         super().__init__()
 
     def forward(self,x):return x
+
+class AStartSearch(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self,x):return x
