@@ -27,7 +27,10 @@ class RatSkill(nn.Module):
 class FiniteStateConstructor(nn.Module):
     def __init__(self):
         super().__init__()
-    def construct(self,inputs):return inputs
+
+    def construct(self,inputs):
+        # function used to constuct the finite state machine.
+        return inputs
 
 class RRT(nn.Module):
     def __init__(self):
