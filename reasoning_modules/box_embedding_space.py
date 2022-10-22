@@ -16,7 +16,12 @@ class QuasiExecutor(nn.Module):
         super().__init__()
 
     def forward(self,program,context):
-        results = context
+        if isinstance(program,str):program = toFuncNode(program)
+        def execute_node(node):
+            if node.token == "scene":return context
+            if node.token == "filter":return context
+            return 0
+        results = execute_node(program,context)
         return results
 
 print(lp)
