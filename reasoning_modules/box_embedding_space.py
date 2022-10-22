@@ -24,3 +24,4 @@ print(lp)
 print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
 
 print(calculate_filter_log_pdf([e1,e2],red))
+
