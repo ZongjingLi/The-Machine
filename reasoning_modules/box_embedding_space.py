@@ -48,6 +48,8 @@ class QuasiExecutor(nn.Module):
             if node.token == "count":
                 input_set = execute_node(node.children[0])
                 return torch.sum(input_set["scores"].exp())
+            if node.token == "relate":
+                return context
             return 0
         results = execute_node(program)
         return results
