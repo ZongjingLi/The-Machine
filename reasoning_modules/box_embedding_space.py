@@ -9,7 +9,7 @@ red  = ConceptBox("red" ,"color")
 e1   = EntityBox(torch.randn([1,100]))
 e2   = EntityBox(torch.randn([1,100]))
 
-context = {"features":[e1,e1],"scores":torch.tensor([0.0,-0.1])}
+context = {"features":[e1,e1],"scores":torch.tensor([-0.01,-0.1])}
 
 class QuasiExecutor(nn.Module):
     def __init__(self,concepts):
