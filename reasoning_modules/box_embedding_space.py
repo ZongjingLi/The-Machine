@@ -42,6 +42,10 @@ class QuasiExecutor(nn.Module):
                 return torch.sum(input_set["scores"].exp())
             if node.token == "relate":
                 return context
+            if node.token == "unique":
+                return context
+            if node.token == "query":
+                return context
             return 0
         results = execute_node(program)
         return results
