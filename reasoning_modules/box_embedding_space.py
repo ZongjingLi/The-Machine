@@ -3,14 +3,6 @@ import torch.nn as nn
 
 from melkor_knowledge import *
 
-blue = ConceptBox("blue","color")
-red  = ConceptBox("red" ,"color")
-
-e1   = EntityBox(torch.randn([1,100]))
-e2   = EntityBox(torch.randn([1,100]))
-
-context = {"features":[e1,e1],"scores":torch.tensor([-0.01,-0.1])}
-
 class QuasiExecutor(nn.Module):
     def __init__(self,concepts):
         super().__init__()
@@ -59,8 +51,13 @@ class QuasiExecutor(nn.Module):
 
 
 if __name__ == "__main__":
-    lp = logJointVolume(e1,blue,True)
-    print(lp)
+    blue = ConceptBox("blue","color")
+    red  = ConceptBox("red" ,"color")
+
+    e1   = EntityBox(torch.randn([1,100]))
+    e2   = EntityBox(torch.randn([1,100]))
+
+    context = {"features":[e1,e1],"scores":torch.tensor([-0.01,-0.1])}
 
     print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
 
