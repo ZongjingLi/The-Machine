@@ -31,12 +31,11 @@ class QuasiExecutor(nn.Module):
                 filter_concept = self.get_concept_by_name(concept_name)
                 filter_pdf = calculate_filter_log_pdf(input_set["features"],filter_concept)
                 filter_pdf = torch.min(filter_pdf,input_set["scores"])
-                print(filter_pdf)
                 return {"features":input_set["features"],"scores":filter_pdf}
             if node.token == "exist":
                 input_set = execute_node(node.children[0])
                 exist_prob = torch.max(input_set["scores"]).exp()
-                output_distribution = torch.log(torch.tensor([exist_prob,1-exist_prob]))
+                output_distribution = torch.log(torch.stack([exist_prob,1-exist_prob]))
                 return {"outputs":["True","False"],"scores":output_distribution}
             if node.token == "count":
                 input_set = execute_node(node.children[0])
@@ -64,7 +63,19 @@ if __name__ == "__main__":
 
     concepts = {"static_concepts":torch.nn.ModuleList([blue,red]),"dynamic_concepts":[],"relations":["relations"]}
     executor = QuasiExecutor(concepts)
-    
+
+
+    optimizer = torch.optim.Adam(executor.parameters(),lr = 2e-3)
+
+    for epoch in range(999):
+
+        results = executor("exist(filter(scene(),red))",context);
+        loss = 0-results["scores"][0]
+        print("epoch: {} logprob:{}".format(epoch,loss))
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
     print("# a test of execution on exist")
     results = executor("exist(scene())",context)
     print(results["outputs"])
@@ -77,15 +88,4 @@ if __name__ == "__main__":
 
     print("# a test of execution on count")
     results = executor("count(scene())",context)
-    print(results)
-
-    optimizer = torch.optim.Adam(executor.parameters(),lr = 2e-3)
-
-    for epoch in range(999):
-
-        results = executor("exist(filter(scene(),red))",context); loss = 0-results["scores"][0]
-        print("epoch: {} logprob:{}".format(epoch,loss))
-        loss.backward()
-        optimizer.zero_grad()
-        optimizer.step()
-    
+    print(results)    
