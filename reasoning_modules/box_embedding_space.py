@@ -31,6 +31,7 @@ class QuasiExecutor(nn.Module):
                 filter_concept = self.get_concept_by_name(concept_name)
                 filter_pdf = calculate_filter_log_pdf(input_set["features"],filter_concept)
                 filter_pdf = torch.min(filter_pdf,input_set["scores"])
+                print(filter_pdf)
                 return {"features":input_set["features"],"scores":filter_pdf}
             if node.token == "exist":
                 input_set = execute_node(node.children[0])
@@ -45,10 +46,6 @@ class QuasiExecutor(nn.Module):
             return 0
         results = execute_node(program)
         return results
-
-
-
-
 
 if __name__ == "__main__":
     blue = ConceptBox("blue","color")
@@ -65,7 +62,7 @@ if __name__ == "__main__":
 
     print("start the test of the concept executor")
 
-    concepts = {"static_concepts":[blue,red],"dynamic_concepts":[],"relations":["relations"]}
+    concepts = {"static_concepts":torch.nn.ModuleList([blue,red]),"dynamic_concepts":[],"relations":["relations"]}
     executor = QuasiExecutor(concepts)
     
     print("# a test of execution on exist")
@@ -81,3 +78,14 @@ if __name__ == "__main__":
     print("# a test of execution on count")
     results = executor("count(scene())",context)
     print(results)
+
+    optimizer = torch.optim.Adam(executor.parameters(),lr = 2e-3)
+
+    for epoch in range(999):
+
+        results = executor("exist(filter(scene(),red))",context); loss = 0-results["scores"][0]
+        print("epoch: {} logprob:{}".format(epoch,loss))
+        loss.backward()
+        optimizer.zero_grad()
+        optimizer.step()
+    
