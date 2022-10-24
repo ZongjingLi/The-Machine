@@ -9,7 +9,7 @@ red  = ConceptBox("red" ,"color")
 e1   = EntityBox(torch.randn([1,100]))
 e2   = EntityBox(torch.randn([1,100]))
 
-lp = logJointVolume(e1,blue,True)
+context = {"objects":[e1,e1],"scores":torch.tensor([0.0,0.0])}
 
 class QuasiExecutor(nn.Module):
     def __init__(self,concepts):
@@ -29,15 +29,33 @@ class QuasiExecutor(nn.Module):
         def execute_node(node):
             if node.token == "scene":return context
             if node.token == "filter":return context
+            if node.token == "exist":
+                input_set = execute_node(node.children[0])
+                exist_prob = torch.max(input_set["scores"]).exp()
+                output_distribution = torch.log(torch.tensor([exist_prob,1-exist_prob]))
+                return {"outputs":["True","False"],"scores":output_distribution}
             return 0
-        results = execute_node(program,context)
+        results = execute_node(program)
         return results
 
 
 
-print(lp)
 
-print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
 
-print(calculate_filter_log_pdf([e1,e2],red))
+if __name__ == "__main__":
+    lp = logJointVolume(e1,blue,True)
+    print(lp)
 
+    print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
+
+    print(calculate_filter_log_pdf([e1,e2],red))
+
+    print("start the test of the concept executor")
+
+    concepts = {"static_concepts":[e1,e2],"dynamic_concepts":[],"relations":["relations"]}
+    executor = QuasiExecutor(concepts)
+
+    results = executor("exist(scene())",context)
+
+    print(results["outputs"])
+    print(results["scores"].exp())
