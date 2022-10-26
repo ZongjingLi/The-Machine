@@ -32,11 +32,15 @@ class FiniteStateConstructor(nn.Module):
         # function used to constuct the finite state machine.
         return inputs
 
+# the rapid-expanding rando tree search in the continuous space
+
 class RRT(nn.Module):
     def __init__(self):
         super().__init__()
 
     def forward(self,x):return x
+
+# the a-start search for the discrete space search
 
 class AStartSearch(nn.Module):
     def __init__(self):

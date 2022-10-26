@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(executor.parameters(),lr = 2e-3)
 
-    for epoch in range(999):
+    for epoch in range(900):
 
         results = executor("exist(filter(scene(),red))",context);
         loss = 0-results["scores"][0]
