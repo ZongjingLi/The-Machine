@@ -61,10 +61,6 @@ if __name__ == "__main__":
 
     context = {"features":[e1,e1],"scores":torch.tensor([-0.01,-0.1])}
 
-    print(calculate_categorical_log_pdf(e1,[blue,red]).exp())
-
-    print(calculate_filter_log_pdf([e1,e2],red))
-
     print("start the test of the concept executor")
 
     concepts = {"static_concepts":torch.nn.ModuleList([blue,red]),"dynamic_concepts":[],"relations":["relations"]}
@@ -77,7 +73,7 @@ if __name__ == "__main__":
 
         results = executor("exist(filter(scene(),red))",context);
         loss = 0-results["scores"][0]
-        print("epoch: {} logprob:{}".format(epoch,loss))
+        #print("epoch: {} logprob:{}".format(epoch,loss))
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
