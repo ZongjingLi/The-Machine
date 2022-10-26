@@ -3,6 +3,8 @@ import torch.nn as nn
 
 from melkor_knowledge import *
 
+def cast_to_entities(features):return [EntityBox(features[i:i+1]) for i in range(features.size[0])]
+
 class QuasiExecutor(nn.Module):
     def __init__(self,concepts):
         super().__init__()
@@ -93,3 +95,4 @@ if __name__ == "__main__":
     print("# a test of execution on count")
     results = executor("count(scene())",context)
     print(results)    
+
