@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from moic.utils    import save_json
+from moic.utils    import save_json,load_json
 from melkor_parser import *
 
 def dfs_seq(program):
@@ -26,7 +26,8 @@ if __name__ == "__main__":
     "red":{"input_types":None},
     "exist":{"input_types":["object_set"]},
     }
-    save_json(rule_diction,"grammar.json")
+    #save_json(rule_diction,"grammar.json")
+    rule_diction = load_json("assets/grammar.json")
     parser =  make_program_parser(["what is that","is there any red object"],rule_diction)
     outputs,lp = parser("is there any red object",dfs_seq("exist(filter(scene(),red))"))
     print(outputs,lp)
