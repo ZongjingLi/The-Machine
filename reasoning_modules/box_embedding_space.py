@@ -52,6 +52,16 @@ class QuasiExecutor(nn.Module):
         results = execute_node(program)
         return results
 
+def make_joint_concept(c1,c2):
+    # make the joint space of c1 and c2 (meshgrid)
+    return 0
+
+def realize(concept_box):
+    upper_bound = BoxMax(concept_box)
+    lower_bound = BoxMin(concept_box)
+    return torch.rand(upper_bound.shape) * (upper_bound - lower_bound)
+
+
 if __name__ == "__main__":
     blue = ConceptBox("blue","color")
     red  = ConceptBox("red" ,"color")
@@ -91,4 +101,6 @@ if __name__ == "__main__":
     print("# a test of execution on count")
     results = executor("count(scene())",context)
     print(results)    
-
+    
+    c3 = realize(red)
+    print(c3)
