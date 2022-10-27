@@ -52,14 +52,22 @@ class QuasiExecutor(nn.Module):
         results = execute_node(program)
         return results
 
+def make_grid(concept):
+    return concept
+
 def make_joint_concept(c1,c2):
-    # make the joint space of c1 and c2 (meshgrid)
-    return 0
+    # if possible, make the intersection of two concepts
+    joint_edge = M(c1,c2)-m(c1,c2)
+    lower_bound = m(c1,c2);upper_bound = lower_bound + joint_edge
+    center = ( lower_bound + upper_bound )/2.0 # the center of the box
+    edge   = upper_bound - center # the edge of the box
+    return ConceptBox("{} and {}".format(c1.name,c2.name),"complex",center,edge)
 
 def realize(concept_box):
+    # choose a random point in the concept box
     upper_bound = BoxMax(concept_box)
     lower_bound = BoxMin(concept_box)
-    return torch.rand(upper_bound.shape) * (upper_bound - lower_bound)
+    return torch.rand(upper_bound.shape) * (upper_bound - lower_bound) + lower_bound
 
 
 if __name__ == "__main__":
@@ -102,5 +110,6 @@ if __name__ == "__main__":
     results = executor("count(scene())",context)
     print(results)    
     
+    complex = make_joint_concept(red,blue)
+    print(complex.name)
     c3 = realize(red)
-    print(c3)
