@@ -26,6 +26,9 @@ class EBMLearner(nn.Module):
         self.program_parser = make_program_parser(corpus,rule_diction)
 
         # 3. quasi-symbolic concept program executor
+        self.quasi_executor = QuasiExecutor({"static_concepts" :[],
+                                             "dynamic_concepts":[],
+                                             "relations":[]})
 
     def perception(self,im):
         return im
