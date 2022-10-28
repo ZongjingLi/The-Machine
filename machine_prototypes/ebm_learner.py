@@ -46,10 +46,10 @@ class EBMLearner(nn.Module):
     def ground_concept(self,image,programs,answers = None):
         if isinstance(programs[0],str): programs = [toFuncNode(program) for program in programs]
         latents = self.perception(image)
-        results = []
+        results = [];eps = 1e-4
         for i in range(latents[0].shape[0]):
             features = torch.stack([latent[i:i+1] for latent in latents])
-            context = {"objects":features,"scores":torch.zeros([len(latents)])}
+            context = {"objects":features,"scores":-eps - torch.zeros([len(latents)])}
             results.append(self.quasi_executor(programs[i],context))
         return results
 
