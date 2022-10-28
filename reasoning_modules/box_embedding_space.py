@@ -55,6 +55,12 @@ class QuasiExecutor(nn.Module):
 def make_grid(concept):
     return concept
 
+def realize_concept(concept):
+    # if the concept is a primitive box
+    # if the concept is union of concepts
+    # if the concept is intersection of boxes
+    return 0
+
 def make_joint_concept(c1,c2):
     # if possible, make the intersection of two concepts
     joint_edge = M(c1,c2)-m(c1,c2)
@@ -63,7 +69,7 @@ def make_joint_concept(c1,c2):
     edge   = upper_bound - center # the edge of the box
     return ConceptBox("{} and {}".format(c1.name,c2.name),"complex",center,edge)
 
-def realize(concept_box):
+def sample(concept_box):
     # choose a random point in the concept box
     upper_bound = BoxMax(concept_box)
     lower_bound = BoxMin(concept_box)
@@ -112,4 +118,4 @@ if __name__ == "__main__":
     
     complex = make_joint_concept(red,blue)
     print(complex.name)
-    c3 = realize(red)
+    c3 = sample(red)
