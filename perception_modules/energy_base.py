@@ -520,7 +520,6 @@ def train(dataloader,models,optims):
 
             latents = models[0].embed_latent(im)
             latents = torch.chunk(latents, ebm_config.components, dim=1)
-
             im_neg = torch.rand_like(im)
             im_neg_init = im_neg
 

@@ -31,11 +31,27 @@ class EBMLearner(nn.Module):
                                              "relations":[]})
 
     def perception(self,im):
-        return im
+        latents = self.component_model.embed_latent(im)
+        latents = torch.chunk(latents, ebm_config.components, dim=1)
+        return list(latents)
+    
+    def render(self,latents,im):
+        # im is just used for rendering the shape
+        im_neg = torch.rand_like(im)
 
-    def ground_concept(self,image,program,answer):
-        if isinstance(program,str): program = toFuncNode(program)
-        return image
+        im_neg, im_negs, im_grad, _ = gen_image(latents,self.ebm_models,im ,im_neg, 10)
+        im_negs = torch.stack(im_negs, dim=1)
+        return im_negs
+
+    def ground_concept(self,image,programs,answers = None):
+        if isinstance(programs[0],str): programs = [toFuncNode(program) for program in programs]
+        latents = self.perception(image)
+        results = []
+        for i in range(latents[0].shape[0]):
+            features = torch.stack([latent[i:i+1] for latent in latents])
+            context = {"objects":features,"scores":torch.zeros([len(latents)])}
+            results.append(self.quasi_executor(programs[i],context))
+        return results
 
     def forward(self,x):
         return x
