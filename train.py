@@ -75,7 +75,7 @@ if __name__ == "__main__":
         "dynamic_concepts":[],
         "relations":[]}
     ebml = EBMLearner(config,sp3_concepts)
-    ebml.component_model = torch.load("comet.ckpt")
+    #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 
     train_comet(sprite3dataset,ebml.component_model,epoch = 500)

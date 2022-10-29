@@ -537,7 +537,7 @@ def train_comet(dataset,model,epoch = 5000):
 
             im_loss = torch.pow(im_negs[:, -1:] - im[:, None], 2).mean()
 
-            total_loss = im_loss +  ml_loss
+            total_loss = im_loss + 0.01 * ml_loss
             total_loss.backward()
 
             [torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0) for model in models]
