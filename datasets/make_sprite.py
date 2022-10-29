@@ -10,10 +10,11 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
     print('Generating sprite dataset...')
     for i in range(n):
         num_sprites = 3 # generate 3 sprite objects
-        counts[i] = num_sprites # number of objects in the scene
-        sprite_objects = [0,0,0]
 
         cat_choice = [0,1,2]
+
+        color_info = {"red":0,"blue":0,"green":0}
+        category_info = {"cube":0,"circle":0,"diamond":0}
         for j in range(num_sprites):
             stats = []
             # the location of the object
@@ -27,9 +28,12 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
 
             # decide the color of the current paining
             color_channel = random_integers(0,2)
+            if color_channel == 0:color_info["red"]+=1
+            if color_channel == 1:color_info["green"]+=1
+            if color_channel == 2:color_info["blue"]+=1
 
             if cat == 0:  # draw circle
-                sprite_objects[0] += 1
+                category_info["circle"] += 1
                 center_x = pos_x + scale // 2.0
                 center_y = pos_y + scale // 2.0
                 for x in range(height):
@@ -38,10 +42,10 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
                         if  dist_center_sq < (scale // 2.0)**2:
                             sprite[x][y][color_channel] = 1.0
             elif cat == 1:  # draw square
-                sprite_objects[1] += 1
+                category_info["cube"] += 1
                 sprite[pos_x:pos_x + scale, pos_y:pos_y + scale, color_channel] = 1.0
             else:  # draw square turned by 45 degrees
-                sprite_objects[2] += 1
+                category_info["diamond"] += 1
                 center_x = pos_x + scale // 2.0
                 center_y = pos_y + scale // 2.0
                 for x in range(height):
@@ -53,12 +57,20 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
             progress_bar(i, n)
         curr_info = []
         # add two questions about category: exist(filter(scene(),cube))
-        curr_info.append({"question": "Is there any {}?", "program": "exist(filter(scene(),{}))", "program_id": 2, "answer": str(sprite_objects[0] != 0), "image": i})
-        curr_info.append({"question": "Is there any {}", "program": "exist(filter(scene(),{}))", "program_id": 2, "answer": str(sprite_objects[1] != 0), "image": i})
+        category_choose = np.random.choice(["cube","circle","diamond"])
+        curr_info.append({"question": "Is there any {}?".format(category_choose), "program": "exist(filter(scene(),{}))".format(category_choose), "program_id": 2, "answer": str(category_info[category_choose] != 0), "image": i})
+        category_choose = np.random.choice(["cube","circle","diamond"])
+        curr_info.append({"question": "Is there any {}?".format(category_choose), "program": "exist(filter(scene(),{}))".format(category_choose), "program_id": 2, "answer": str(category_info[category_choose] != 0), "image": i})
         # add two questions about color: exist(filter(scene(),red))
-        curr_info.append({"question": "Is there any diamond?", "program": "exist(filter(scene(),Diamond))", "program_id": 2, "answer": str(sprite_objects[2] != 0), "image": i})
-        curr_info.append({"question": "How many objects are there", "program": "count(scene())", "program_id": 2, "answer": str(counts[i]), "image": i})
-        # add two question about counting: count(filter(scene(),concept))       
+        color_choose = np.random.choice(["red","green","blue"])
+        curr_info.append({"question": "Is there any {} object?".format(color_choose), "program": "exist(filter(scene(),{}))".format(color_choose), "program_id": 2, "answer": str(color_info[color_choose] != 0), "image": i})
+        color_choose = np.random.choice(["red","green","blue"])
+        curr_info.append({"question": "Is there any {} object?".format(color_choose), "program": "exist(filter(scene(),{}))".format(color_choose), "program_id": 2, "answer": str(color_info[color_choose] != 0), "image": i})
+        # add two question about counting: count(filter(scene(),concept))      
+        color_choose = np.random.choice(["red","green","blue"])
+        curr_info.append({"question": "how many {} object are there?".format(color_choose), "program": "count(filter(scene(),{}))".format(color_choose), "program_id": 2, "answer": str(color_info[color_choose]), "image": i}) 
+        category_choose = np.random.choice(["cube","circle","diamond"])
+        curr_info.append({"question": "how many {} are there?".format(category_choose), "program": "count(filter(scene(),{}))".format(category_choose), "program_id": 2, "answer": str(category_info[category_choose]), "image": i}) 
         qa_dataset.append(curr_info)
         #qa_dataset.append({"question": "How many objects are there?", "program": "count(scene())", "program_id": 2, "answer": str(sprite_objects[0] != 0), "image": i})
     images = np.clip(images, 0.0, 1.0)

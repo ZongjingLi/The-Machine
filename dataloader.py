@@ -4,7 +4,7 @@ import torch.nn as nn
 import os
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
-
+from moic.utils import load_json
 from PIL import Image
 
 class SpriteData(Dataset):
@@ -43,6 +43,9 @@ class Sprite3(Dataset):
         self.img_transform = transforms.Compose(
             [transforms.ToTensor()]
         )
+
+        self.questions = load_json("datasets/sprites3/train_sprite3_qa.json")
+        
     def __len__(self): return 100#len(self.files)
 
     def __getitem__(self,index):
