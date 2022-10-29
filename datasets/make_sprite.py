@@ -52,10 +52,13 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
         if i % 100 == 0:
             progress_bar(i, n)
         curr_info = []
-        curr_info.append({"question": "Is there any circle?", "program": "exist(filter(scene(),Circle))", "program_id": 2, "answer": str(sprite_objects[0] != 0), "image": i})
-        curr_info.append({"question": "Is there any cube", "program": "exist(filter(scene(),Cube))", "program_id": 2, "answer": str(sprite_objects[1] != 0), "image": i})
+        # add two questions about category: exist(filter(scene(),cube))
+        curr_info.append({"question": "Is there any {}?", "program": "exist(filter(scene(),{}))", "program_id": 2, "answer": str(sprite_objects[0] != 0), "image": i})
+        curr_info.append({"question": "Is there any {}", "program": "exist(filter(scene(),{}))", "program_id": 2, "answer": str(sprite_objects[1] != 0), "image": i})
+        # add two questions about color: exist(filter(scene(),red))
         curr_info.append({"question": "Is there any diamond?", "program": "exist(filter(scene(),Diamond))", "program_id": 2, "answer": str(sprite_objects[2] != 0), "image": i})
         curr_info.append({"question": "How many objects are there", "program": "count(scene())", "program_id": 2, "answer": str(counts[i]), "image": i})
+        # add two question about counting: count(filter(scene(),concept))       
         qa_dataset.append(curr_info)
         #qa_dataset.append({"question": "How many objects are there?", "program": "count(scene())", "program_id": 2, "answer": str(sprite_objects[0] != 0), "image": i})
     images = np.clip(images, 0.0, 1.0)

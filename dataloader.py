@@ -27,3 +27,13 @@ class Clevr4(Dataset):
 
     def __getitem__(self,index):
         return index
+
+class Sprite3(Dataset):
+    def __init__(self,split = "train"):
+        super().__init__()
+        assert split in ["train","test","validate"],print("Unknown dataset split type: {}".format(split))
+    
+    def len(self):return 1000
+    
+    def __getitem__(self,index):
+        return index
