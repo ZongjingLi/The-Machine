@@ -77,5 +77,5 @@ if __name__ == "__main__":
     EBML = EBMLearner(config,sp3_concepts)
     sprite3dataset = Sprite3("train")
 
-    train_comet(sprite3dataset,EBML.component_model)
+    train_comet(sprite3dataset,EBML.component_model,epoch = 1)
     train_ebml(EBML,sprite3dataset,joint = False)

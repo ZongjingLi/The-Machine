@@ -504,11 +504,10 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 import tqdm
 
-def train_comet(dataset,model):
+def train_comet(dataset,model,epoch = 5000):
     models = [model for i in range(ebm_config.components)]
     optims = [torch.optim.Adam(model.parameters(),lr = 2e-4) for model in models]
     dataloader = DataLoader(dataset,batch_size = 4)
-    epoch = 5000
     for i in range(epoch):
         total_loss = 0
         itr = 0
