@@ -26,7 +26,8 @@ class EBMLearner(nn.Module):
         self.program_parser = make_program_parser(corpus,rule_diction)
 
         # 3. quasi-symbolic concept program executor
-        self.quasi_executor = QuasiExecutor({"static_concepts" :[],
+        self.quasi_executor = QuasiExecutor({"static_concepts" :[ConceptBox("red", ctype = "color",dim = 64),
+                                                                 ConceptBox("blue",ctype = "color",dim = 64)],
                                              "dynamic_concepts":[],
                                              "relations":[]})
 
@@ -49,7 +50,8 @@ class EBMLearner(nn.Module):
         results = [];eps = 1e-4
         for i in range(latents[0].shape[0]):
             features = torch.stack([latent[i:i+1] for latent in latents])
-            context = {"objects":features,"scores":-eps - torch.zeros([len(latents)])}
+
+            context = {"features":cast_to_entities(features),"scores":-eps - torch.zeros([len(latents)])}
             results.append(self.quasi_executor(programs[i],context))
         return results
 
