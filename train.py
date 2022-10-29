@@ -21,24 +21,24 @@ def train_ebml(model,dataset,joint = False,visualize = False):
     from tqdm import tqdm
     optimizer = torch.optim.Adam(model.parameters(),lr = 2e-4)
 
-    trainloader = DataLoader(dataset)
+    trainloader = DataLoader(dataset,batch_size = 4)
+    loss_history = [];plt.ion()
     
-    for epoch in tqdm(range(1000)):
+    for epoch in range(1000):
         total_loss = 0
-        for sample in trainloader:
+        for sample in tqdm(trainloader):
             # collect data from the sample
             images    = sample["image"];questions = sample["question"]
             programs  = sample["program"];answers = sample["answer"]
-            
             # ground the concept in the image by neuro-symbolic programs
             results = model.ground_concept(images,programs)
             
             # ground the results from the quasi-symbolic executor
             logprobs  = ground_results(results,answers)
-            
+
             # add all the terms from the quasi-symbolic executor to the qa-loss
             qa_loss = 0
-            for term in logprobs:qa_loss - term
+            for term in logprobs:qa_loss -= term
             
             if joint:
                 energy_loss = 0;recons_loss = 0
@@ -48,12 +48,15 @@ def train_ebml(model,dataset,joint = False,visualize = False):
             qa_loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+            total_loss += qa_loss
 
         if joint:
             print("epoch: {} qa_loss:{} recons: {} energy_loss:{}".format(epoch,qa_loss,recons_loss,energy_loss))
         else:
-            print("epoch: {} qa_loss:{}".format(epoch,qa_loss))
-
+            print("epoch: {} total_loss:{}".format(epoch,total_loss))
+        loss_history.append(total_loss.detach())
+        plt.plot(loss_history);plt.pause(0.0001);plt.cla()
+    plt.ioff()
 if __name__ == "__main__":
     from config import *
     from machine_prototypes.ebm_learner import *

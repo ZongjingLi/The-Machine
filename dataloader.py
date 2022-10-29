@@ -7,6 +7,8 @@ from torch.utils.data import Dataset, DataLoader
 from moic.utils import load_json
 from PIL import Image
 
+import numpy as np
+
 class SpriteData(Dataset):
     def __init__(self,split = "train"):
         super().__init__()
@@ -46,14 +48,20 @@ class Sprite3(Dataset):
 
         self.questions = load_json("datasets/sprites3/train_sprite3_qa.json")
         
-    def __len__(self): return 100#len(self.files)
+    def __len__(self): return len(self.files)
 
     def __getitem__(self,index):
-        path = self.files[index]
+        qa_sample = self.questions[index]
         # open the image of the file
-        image = Image.open(os.path.join(self.root_dir,self.split,"{}_{}.png".format(self.split,index)))
+        idx = np.random.choice(range(len(qa_sample)))
+        
+        image = Image.open(os.path.join(self.root_dir,self.split,"{}_{}.png".format(self.split,qa_sample[idx]["image"])))
         image = image.convert("RGB").resize([64,64])
         image = self.img_transform(image)
 
-        sample = {"image":image,"question":None,"program":None,"answer":None}
+        
+        sample = {"image":image,
+                "question":qa_sample[idx]["question"],
+                "program" :qa_sample[idx]["program"],
+                "answer"  :qa_sample[idx]["answer"],}
         return sample
