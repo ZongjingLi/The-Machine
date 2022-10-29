@@ -59,5 +59,8 @@ class EBMLearner(nn.Module):
             pass
         return outputs
 
+    def parse_concept(self,concept):
+        return 0
+
     def forward(self,x):
         return x
