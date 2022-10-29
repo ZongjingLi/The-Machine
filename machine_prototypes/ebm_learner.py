@@ -64,3 +64,5 @@ class EBMLearner(nn.Module):
 
     def forward(self,x):
         return x
+
+    def __str__(self):return "the name is Violet Evergarden"

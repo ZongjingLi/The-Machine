@@ -60,7 +60,6 @@ if __name__ == "__main__":
 
     # create the energy-based meta-concept learner
     EBML = EBMLearner(config)
-
     sprite3dataset = Sprite3("train")
 
     train_ebml(EBML,sprite3dataset,joint = False)
