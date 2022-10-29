@@ -446,8 +446,8 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu"
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--device",default = device)
-parser.add_argument('--filter_dim', default=64, type=int, help='number of filters to use')
-parser.add_argument('--components', default=5, type=int, help='number of components to explain an image with')
+parser.add_argument('--filter_dim', default=16, type=int, help='number of filters to use')
+parser.add_argument('--components', default=4, type=int, help='number of components to explain an image with')
 parser.add_argument('--component_weight', action='store_true', help='optimize for weights of the components also')
 parser.add_argument('--tie_weight', default = True,action='store_true', help='tie the weights between seperate models')
 parser.add_argument('--optimize_mask', action='store_true', help='also optimize a segmentation mask over image')

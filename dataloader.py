@@ -52,5 +52,5 @@ class Sprite3(Dataset):
         image = image.convert("RGB").resize([64,64])
         image = self.img_transform(image)
 
-        sample = {"image":image}
+        sample = {"image":image,"question":None,"program":None,"answer":None}
         return sample

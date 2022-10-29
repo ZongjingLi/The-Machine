@@ -59,7 +59,16 @@ if __name__ == "__main__":
     from machine_prototypes.ebm_learner import *
 
     # create the energy-based meta-concept learner
-    EBML = EBMLearner(config)
+    sp3_concepts =\
+        {"static_concepts" :[ConceptBox("red",  ctype = "color",dim = 64),
+                             ConceptBox("green",ctype = "color",dim = 64),
+                             ConceptBox("blue", ctype = "color",dim = 64),
+                             ConceptBox("cube",ctype = "category",dim = 64),
+                             ConceptBox("circle",ctype = "category",dim = 64),
+                             ConceptBox("diamond",ctype = "category",dim = 64),],
+        "dynamic_concepts":[],
+        "relations":[]}
+    EBML = EBMLearner(config,sp3_concepts)
     sprite3dataset = Sprite3("train")
 
     train_ebml(EBML,sprite3dataset,joint = False)

@@ -5,7 +5,7 @@ from  parser_modules.vanilla_parser  import *
 from  reasoning_modules.box_embedding_space import *
 
 class EBMLearner(nn.Module):
-    def __init__(self,config):
+    def __init__(self,config,concepts):
         super().__init__()
 
         # 1. the energy based perception module, input the image and output the 
@@ -21,11 +21,6 @@ class EBMLearner(nn.Module):
         self.program_parser = make_program_parser(corpus,rule_diction)
 
         # 3. quasi-symbolic concept program executor
-        concepts = \
-        {"static_concepts" :[ConceptBox("red", ctype = "color",dim = 64),
-                             ConceptBox("blue",ctype = "color",dim = 64)],
-        "dynamic_concepts":[],
-        "relations":[]}
         if config.concepts is not None:concepts = torch.load(config.concepts)
         self.quasi_executor = QuasiExecutor(concepts)
 
