@@ -26,10 +26,13 @@ class EBMLearner(nn.Module):
         self.program_parser = make_program_parser(corpus,rule_diction)
 
         # 3. quasi-symbolic concept program executor
-        self.quasi_executor = QuasiExecutor({"static_concepts" :[ConceptBox("red", ctype = "color",dim = 64),
-                                                                 ConceptBox("blue",ctype = "color",dim = 64)],
-                                             "dynamic_concepts":[],
-                                             "relations":[]})
+        concepts = \
+        {"static_concepts" :[ConceptBox("red", ctype = "color",dim = 64),
+                             ConceptBox("blue",ctype = "color",dim = 64)],
+        "dynamic_concepts":[],
+        "relations":[]}
+        if config.concepts is not None:concepts = torch.load(config.concepts)
+        self.quasi_executor = QuasiExecutor(concepts)
 
     def perception(self,im):
         latents = self.component_model.embed_latent(im)

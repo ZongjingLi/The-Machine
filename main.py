@@ -18,11 +18,12 @@ def ground_results(results,answers):
     return outputs
 
 def train_ebml(model,dataset,joint = False):
+    from tqdm import tqdm
     optimizer = torch.optim.Adam(model.parameters(),lr = 2e-4)
 
     trainloader = DataLoader(dataset)
     
-    for epoch in range(1000):
+    for epoch in tqdm(range(1000)):
         total_loss = 0
         for sample in trainloader:
             images    = sample["image"]
@@ -40,6 +41,8 @@ def train_ebml(model,dataset,joint = False):
             qa_loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+        
+        print()
 
 if __name__ == "__main__":
     from config import *
