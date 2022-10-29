@@ -23,6 +23,10 @@ def train_ebml(model,dataset,joint = False,visualize = False):
 
     trainloader = DataLoader(dataset,batch_size = 4)
     loss_history = [];plt.ion()
+
+    if joint:
+        model.ebm_models = [model.component_model for _ in range(4)]
+        ebm_optimizers = [torch.optim.Adam(model.parameters(),lr = 2e-4) for model in model.ebm_models]
     
     for epoch in range(9000):
         total_loss = 0
@@ -39,24 +43,61 @@ def train_ebml(model,dataset,joint = False,visualize = False):
             # add all the terms from the quasi-symbolic executor to the qa-loss
             qa_loss = 0
             for term in logprobs:qa_loss -= term
+            working_loss = 0
             
             if joint:
-                energy_loss = 0;recons_loss = 0
+                
+                latents = model.component_model.embed_latent(images)
+                latents = torch.chunk(latents, ebm_config.components, dim=1)
+                im_neg = torch.rand_like(images)
+                im_neg += 0.1 * images.detach()
+
+                im_neg, im_negs, im_grad, _ = gen_image(latents,model.ebm_models,images ,im_neg, 5)
+                im_negs = torch.stack(im_negs, dim=1)
+
+                energy_pos = 0
+                energy_neg = 0
+
+                energy_poss = []
+                energy_negs = []
+                for i in range(ebm_config.components):
+                    energy_poss.append(model.ebm_models[i].forward(images, latents[i]))
+                    energy_negs.append(model.ebm_models[i].forward(im_neg.detach(), latents[i]))
+
+                energy_pos = torch.stack(energy_poss, dim=1)
+                energy_neg = torch.stack(energy_negs, dim=1)
+                ml_loss = torch.abs(energy_pos - energy_neg).mean()
+
+                im_loss = torch.pow(im_negs[:, -1:] - images[:, None], 2).mean()
+                working_loss += im_loss + 0.01 * ml_loss
+                energy_loss = ml_loss;recons_loss = im_loss
+                plt.figure("images")
+                plt.subplot(1,2,1);plt.cla()
+                plt.imshow(im_neg.cpu().detach()[0].permute([1,2,0]))
+                plt.subplot(1,2,2);plt.cla()
+                plt.imshow(images.cpu()[0].permute([1,2,0]))
+                plt.pause(0.0001)
             # if it is a joint training, add the reconstruction loss and energy loss from the ebm
 
             # optimize the concept structure by reduce the the qa-loss Pr[a,e(c,im)]
-            qa_loss.backward()
+            working_loss += qa_loss
+            working_loss.backward()
+
             optimizer.step()
             optimizer.zero_grad()
-            total_loss += qa_loss
-
+            if joint:
+                [torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0) for model in model.ebm_models]
+                [optimizer.step() for optimizer in ebm_optimizers]
+                [optimizer.zero_grad() for optimizer in ebm_optimizers]
+            total_loss += working_loss
+        loss_history.append(total_loss.detach())
         if joint:
             print("epoch: {} qa_loss:{} recons: {} energy_loss:{}".format(epoch,qa_loss,recons_loss,energy_loss))
         else:
             print("epoch: {} total_loss:{}".format(epoch,total_loss))
-        loss_history.append(total_loss.detach())
+        plt.figure("namomo")
         torch.save(model,"model.ckpt")
-        plt.plot(loss_history);plt.pause(0.0001);plt.cla()
+        plt.cla();plt.plot(loss_history);plt.pause(0.0001);
     plt.ioff()
     plt.show()
 
@@ -75,8 +116,9 @@ if __name__ == "__main__":
         "dynamic_concepts":[],
         "relations":[]}
     ebml = EBMLearner(config,sp3_concepts)
-    ebml.component_model = torch.load("comet.ckpt")
+    ebml = torch.load("model.ckpt")
+    #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 
-    train_comet(sprite3dataset,ebml.component_model,epoch = 500)
-    train_ebml(ebml,sprite3dataset,joint = False)
+    #train_comet(sprite3dataset,ebml.component_model,epoch = 500)
+    train_ebml(ebml,sprite3dataset,joint = True)

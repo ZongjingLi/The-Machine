@@ -513,13 +513,14 @@ def train_comet(dataset,model,epoch = 5000):
         total_loss = 0
         itr = 0
         working = 0
+        loss_history = []
         for sample in tqdm.tqdm(dataloader):
             im = sample["image"]
 
             latents = models[0].embed_latent(im)
             latents = torch.chunk(latents, ebm_config.components, dim=1)
             im_neg = torch.rand_like(im)
-            im_neg_init = im_neg
+            im_neg += 0.1 * im.detach()
 
             im_neg, im_negs, im_grad, _ = gen_image(latents,models,im ,im_neg, 5)
             im_negs = torch.stack(im_negs, dim=1)
@@ -539,7 +540,7 @@ def train_comet(dataset,model,epoch = 5000):
 
             im_loss = torch.pow(im_negs[:, -1:] - im[:, None], 2).mean()
 
-            total_loss = im_loss + 0.08 * ml_loss
+            total_loss = im_loss + 0.1 * ml_loss
             total_loss.backward()
 
             [torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0) for model in models]
