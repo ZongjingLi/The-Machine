@@ -1,7 +1,11 @@
 import torch
 import torch.nn as nn
 
+import os
+from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
+
+from PIL import Image
 
 class SpriteData(Dataset):
     def __init__(self,split = "train"):
@@ -33,7 +37,20 @@ class Sprite3(Dataset):
         super().__init__()
         assert split in ["train","test","validate"],print("Unknown dataset split type: {}".format(split))
     
-    def len(self):return 1000
-    
+        self.split = split
+        self.root_dir = "datasets/sprites3"
+        self.files = os.listdir(os.path.join(self.root_dir,split))
+        self.img_transform = transforms.Compose(
+            [transforms.ToTensor()]
+        )
+    def __len__(self): return 100#len(self.files)
+
     def __getitem__(self,index):
-        return index
+        path = self.files[index]
+        # open the image of the file
+        image = Image.open(os.path.join(self.root_dir,self.split,"{}_{}.png".format(self.split,index)))
+        image = image.convert("RGB").resize([64,64])
+        image = self.img_transform(image)
+
+        sample = {"image":image}
+        return sample

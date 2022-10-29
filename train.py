@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from dataloader import *
 from torch.utils.data import Dataset, DataLoader
 
 def ground_results(results,answers):
@@ -61,4 +61,6 @@ if __name__ == "__main__":
     # create the energy-based meta-concept learner
     EBML = EBMLearner(config)
 
-    train_ebml(EBML,[],joint = False)
+    sprite3dataset = Sprite3("train")
+
+    train_ebml(EBML,sprite3dataset,joint = False)
