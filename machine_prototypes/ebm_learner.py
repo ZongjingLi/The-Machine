@@ -4,11 +4,6 @@ from  perception_modules.energy_base import *
 from  parser_modules.vanilla_parser  import *
 from  reasoning_modules.box_embedding_space import *
 
-import argparse
-
-model_parser = argparse.ArgumentParser()
-model_config = model_parser.parse_args(args = [])
-
 class EBMLearner(nn.Module):
     def __init__(self,config):
         super().__init__()
