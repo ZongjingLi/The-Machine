@@ -15,17 +15,17 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
 
         cat_choice = [0,1,2]
         for j in range(num_sprites):
+            stats = []
+            # the location of the object
             pos_y = random_integers(0, height - 12)
             pos_x = random_integers(0, width - 12)
 
             scale = random_integers(12, min(16, height-pos_y, width-pos_x))
 
             cat = np.random.choice(cat_choice)
-            #cat = random_integers(0,2)
-            #cat_choice.remove(cat)
             sprite = np.zeros((height, width, 3))
 
-            # decidet the color of the current paining
+            # decide the color of the current paining
             color_channel = random_integers(0,2)
 
             if cat == 0:  # draw circle
@@ -66,4 +66,4 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
 
 if __name__ == "__main__":
 
-    make_sprite3_dataset(10,64,64,"train")
+    make_sprite3_dataset(30,64,64,"train")
