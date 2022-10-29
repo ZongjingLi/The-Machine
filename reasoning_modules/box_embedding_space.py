@@ -77,11 +77,11 @@ def sample(concept_box):
 
 
 if __name__ == "__main__":
-    blue = ConceptBox("blue","color")
-    red  = ConceptBox("red" ,"color")
+    blue = ConceptBox("blue","color",dim = 64)
+    red  = ConceptBox("red" ,"color",dim = 64)
 
-    e1   = EntityBox(torch.randn([1,100]))
-    e2   = EntityBox(torch.randn([1,100]))
+    e1   = EntityBox(torch.randn([1,64]))
+    e2   = EntityBox(torch.randn([1,64]))
 
     context = {"features":[e1,e1],"scores":torch.tensor([-0.01,-0.1])}
 

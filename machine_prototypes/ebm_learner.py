@@ -53,5 +53,11 @@ class EBMLearner(nn.Module):
             results.append(self.quasi_executor(programs[i],context))
         return results
 
+    def generate_concepts(concepts):
+        outputs = []
+        for concept in concepts:
+            pass
+        return outputs
+
     def forward(self,x):
         return x
