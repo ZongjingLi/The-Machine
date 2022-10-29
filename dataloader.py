@@ -23,5 +23,7 @@ class Clevr4(Dataset):
         super().__init__()
         assert split in ["train","test","validate"],print("Unknown dataset split type: {}".format(split))
 
-    def forward(self,x):
-        return x
+    def len(self):return 1
+
+    def __getitem__(self,index):
+        return index
