@@ -312,7 +312,7 @@ class LatentEBM(nn.Module):
         self.recurrent_model = args.recurrent_model
 
 
-        self.im_size = 32
+        self.im_size = 64
 
         self.layer_encode = CondResBlock(filters=filter_dim, latent_dim=latent_dim, rescale=False)
         self.layer1 = CondResBlock(filters=filter_dim, latent_dim=latent_dim, rescale=False)
@@ -490,7 +490,7 @@ def gen_image(latents,models,im,im_neg,num_steps):
         
         im_grad, = torch.autograd.grad([energy.sum()],[im_neg],create_graph = True)
 
-        im_neg = im_neg - 1000.0 * im_grad + im_noise * 0.1
+        im_neg = im_neg - 700.0 * im_grad
 
         latents = latents
 
@@ -501,16 +501,13 @@ def gen_image(latents,models,im,im_neg,num_steps):
     return im_neg,im_negs,im_grad,masks
 
 import matplotlib.pyplot as plt
-
+from torch.utils.data import Dataset, DataLoader
 import tqdm
 
-def train(dataloader,models,optims):
-    model  = LatentEBM(ebm_config)
+def train_comet(dataset,model):
     models = [model for i in range(ebm_config.components)]
     optims = [torch.optim.Adam(model.parameters(),lr = 2e-4) for model in models]
-
-    import lpips
-    loss_fn_vgg = lpips.LPIPS(net='vgg')
+    dataloader = DataLoader(dataset,batch_size = 4)
     epoch = 5000
     for i in range(epoch):
         total_loss = 0
@@ -523,7 +520,7 @@ def train(dataloader,models,optims):
             im_neg = torch.rand_like(im)
             im_neg_init = im_neg
 
-            im_neg, im_negs, im_grad, _ = gen_image(latents,models,im ,im_neg, 10)
+            im_neg, im_negs, im_grad, _ = gen_image(latents,models,im ,im_neg, 5)
             im_negs = torch.stack(im_negs, dim=1)
 
             energy_pos = 0
@@ -554,6 +551,7 @@ def train(dataloader,models,optims):
               plt.imshow(im.cpu()[0].permute([1,2,0]))
               plt.pause(0.0001)
             itr+=1
-
+    
+        print("epoch:{} loss:{}".format(epoch,total_loss.detach()))
         plt.imshow(im_neg.detach()[0].permute([1,2,0]))
-        torch.save(model,"model.ckpt")
+        torch.save(model,"comet.ckpt")

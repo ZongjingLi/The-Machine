@@ -81,4 +81,4 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
 
 if __name__ == "__main__":
 
-    make_sprite3_dataset(30,64,64,"train")
+    make_sprite3_dataset(1200,64,64,"train")

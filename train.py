@@ -24,7 +24,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
     trainloader = DataLoader(dataset,batch_size = 4)
     loss_history = [];plt.ion()
     
-    for epoch in range(1000):
+    for epoch in range(9000):
         total_loss = 0
         for sample in tqdm(trainloader):
             # collect data from the sample
@@ -55,23 +55,27 @@ def train_ebml(model,dataset,joint = False,visualize = False):
         else:
             print("epoch: {} total_loss:{}".format(epoch,total_loss))
         loss_history.append(total_loss.detach())
+        torch.save(model,"model.ckpt")
         plt.plot(loss_history);plt.pause(0.0001);plt.cla()
     plt.ioff()
+    plt.show()
+
 if __name__ == "__main__":
     from config import *
     from machine_prototypes.ebm_learner import *
 
     # create the energy-based meta-concept learner
     sp3_concepts =\
-        {"static_concepts" :[ConceptBox("red",  ctype = "color",dim = 64),
+        {"static_concepts" :nn.ModuleList([ConceptBox("red",  ctype = "color",dim = 64),
                              ConceptBox("green",ctype = "color",dim = 64),
                              ConceptBox("blue", ctype = "color",dim = 64),
                              ConceptBox("cube",ctype = "category",dim = 64),
                              ConceptBox("circle",ctype = "category",dim = 64),
-                             ConceptBox("diamond",ctype = "category",dim = 64),],
+                             ConceptBox("diamond",ctype = "category",dim = 64),]),
         "dynamic_concepts":[],
         "relations":[]}
     EBML = EBMLearner(config,sp3_concepts)
     sprite3dataset = Sprite3("train")
 
+    train_comet(sprite3dataset,EBML.component_model)
     train_ebml(EBML,sprite3dataset,joint = False)
