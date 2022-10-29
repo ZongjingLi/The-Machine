@@ -490,7 +490,7 @@ def gen_image(latents,models,im,im_neg,num_steps):
         
         im_grad, = torch.autograd.grad([energy.sum()],[im_neg],create_graph = True)
 
-        im_neg = im_neg - 700.0 * im_grad
+        im_neg = im_neg - 1000.0 * im_grad
 
         latents = latents
 
@@ -537,7 +537,7 @@ def train_comet(dataset,model,epoch = 5000):
 
             im_loss = torch.pow(im_negs[:, -1:] - im[:, None], 2).mean()
 
-            total_loss = im_loss + 0.05 * ml_loss
+            total_loss = im_loss + 0.1 * ml_loss
             total_loss.backward()
 
             [torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0) for model in models]
