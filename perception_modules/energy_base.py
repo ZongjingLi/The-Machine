@@ -508,9 +508,11 @@ def train_comet(dataset,model,epoch = 5000):
     models = [model for i in range(ebm_config.components)]
     optims = [torch.optim.Adam(model.parameters(),lr = 2e-4) for model in models]
     dataloader = DataLoader(dataset,batch_size = 4)
+    loss_history = []
     for i in range(epoch):
         total_loss = 0
         itr = 0
+        working = 0
         for sample in tqdm.tqdm(dataloader):
             im = sample["image"]
 
@@ -537,20 +539,23 @@ def train_comet(dataset,model,epoch = 5000):
 
             im_loss = torch.pow(im_negs[:, -1:] - im[:, None], 2).mean()
 
-            total_loss = im_loss + 0.1 * ml_loss
+            total_loss = im_loss + 0.08 * ml_loss
             total_loss.backward()
 
             [torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0) for model in models]
             [optimizer.step() for optimizer in optims]
             [optimizer.zero_grad() for optimizer in optims]
             if itr%2 ==0:
-              plt.subplot(1,2,1);plt.cla()
+              loss_history.append(total_loss.detach())
+              plt.subplot(2,2,1);plt.cla()
               plt.imshow(im_neg.cpu().detach()[0].permute([1,2,0]))
-              plt.subplot(1,2,2);plt.cla()
+              plt.subplot(2,2,2);plt.cla()
               plt.imshow(im.cpu()[0].permute([1,2,0]))
+              plt.subplot(2,1,2);plt.cla()
+              plt.plot(loss_history)
               plt.pause(0.0001)
             itr+=1
     
-        print("epoch:{} loss:{}".format(epoch,total_loss.detach()))
+        print("epoch:{} loss:{}".format(i,total_loss.detach()))
         plt.imshow(im_neg.detach()[0].permute([1,2,0]))
         torch.save(model,"comet.ckpt")
