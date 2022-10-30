@@ -21,7 +21,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
     from tqdm import tqdm
     optimizer = torch.optim.Adam(model.parameters(),lr = 2e-4)
 
-    trainloader = DataLoader(dataset,batch_size = 4)
+    trainloader = DataLoader(dataset,batch_size = 24,shuffle=True)
     loss_history = [];plt.ion()
 
     if joint:
@@ -115,7 +115,7 @@ if __name__ == "__main__":
                              ConceptBox("diamond",ctype = "category",dim = 64),]),
         "dynamic_concepts":[],
         "relations":[]}
-    ebml = EBMLearner(config,sp3_concepts)
+    #ebml = EBMLearner(config,sp3_concepts)
     ebml = torch.load("model.ckpt")
     #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
