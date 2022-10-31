@@ -107,7 +107,7 @@ One important aspect for leanring the dynamic concept over videos is a good phys
 ![](results/spotlight_vda.jpeg)
 
 # Energy Based Generative Model
-![joint_concept_model](results/joint_concept.png)
+![joint_concept_model](results/diagram_composite_concept.png)
 
 # Updates
 2022.9.27 -- valarauka created
