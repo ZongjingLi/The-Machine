@@ -106,6 +106,9 @@ An input sequence composed of relational states: each column represents the stat
 One important aspect for leanring the dynamic concept over videos is a good physics prediction engine. In this repo, the propagation network is used to learn physics over slots. At the core of our system is a physical world representation that is first recovered by a perception module and then utilized by physics and graphics engine. During training, the perception module and the generative model learn by visual de-animation -- evolve the observed slots by propagation over time and render them using the graphic decoder. During the testing, the system first recovers the physical world state, and then uses the generative models for reasoning and future prediction.
 ![](results/spotlight_vda.jpeg)
 
+# Energy Based Generative Model
+![joint_concept_model](results/joint_concept.png)
+
 # Updates
 2022.9.27 -- valarauka created
 
