@@ -80,7 +80,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
             # if it is a joint training, add the reconstruction loss and energy loss from the ebm
 
             # optimize the concept structure by reduce the the qa-loss Pr[a,e(c,im)]
-            working_loss += qa_loss
+            working_loss += qa_loss * 0.01
             working_loss.backward()
 
             optimizer.step()

@@ -17,6 +17,14 @@ class QuasiExecutor(nn.Module):
             if k.name == name:return k
         assert False
 
+    def sample_concept(self,concept = "AND(red,circle)"):
+        if isinstance(concept,str):concept = toFuncNode(concept)
+        def parse_concept(node):
+            if node.token == "AND":return make_joint_concept(parse_concept(node.children[0]),parse_concept(node.children[1]))
+            elif(0):pass
+            else:return self.get_concept__by_name(node.token)
+        return parse_concept(concept)
+
     def forward(self,program,context):
         if isinstance(program,str):program = toFuncNode(program)
         """
