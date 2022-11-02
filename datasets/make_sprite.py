@@ -21,7 +21,7 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
             pos_y = random_integers(0, height - 12)
             pos_x = random_integers(0, width - 12)
 
-            scale = random_integers(8, min(12, height-pos_y, width-pos_x))
+            scale = random_integers(6, min(9, height-pos_y, width-pos_x))
 
             cat = np.random.choice(cat_choice)
             sprite = np.zeros((height, width, 3))
@@ -81,4 +81,4 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
 
 if __name__ == "__main__":
 
-    make_sprite3_dataset(1200,64,64,"train")
+    make_sprite3_dataset(3600,32,32,"train")

@@ -96,7 +96,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
         else:
             print("epoch: {} total_loss:{}".format(epoch,total_loss))
         plt.figure("namomo")
-        torch.save(model,"model.ckpt")
+        torch.save(model,"model_small.ckpt")
         plt.cla();plt.plot(loss_history);plt.pause(0.0001);
     plt.ioff()
     plt.show()
@@ -115,8 +115,8 @@ if __name__ == "__main__":
                              ConceptBox("diamond",ctype = "category",dim = 64),]),
         "dynamic_concepts":[],
         "relations":[]}
-    #ebml = EBMLearner(config,sp3_concepts)
-    ebml = torch.load("model.ckpt")
+    ebml = EBMLearner(config,sp3_concepts)
+    #ebml = torch.load("model_small.ckpt")
     #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 

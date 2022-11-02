@@ -312,7 +312,7 @@ class LatentEBM(nn.Module):
         self.recurrent_model = args.recurrent_model
 
 
-        self.im_size = 64
+        self.im_size = 32
 
         self.layer_encode = CondResBlock(filters=filter_dim, latent_dim=latent_dim, rescale=False)
         self.layer1 = CondResBlock(filters=filter_dim, latent_dim=latent_dim, rescale=False)

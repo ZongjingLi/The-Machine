@@ -56,7 +56,7 @@ class Sprite3(Dataset):
         idx = np.random.choice(range(len(qa_sample)))
         
         image = Image.open(os.path.join(self.root_dir,self.split,"{}_{}.png".format(self.split,qa_sample[idx]["image"])))
-        image = image.convert("RGB").resize([64,64])
+        image = image.convert("RGB").resize([32,32])
         image = self.img_transform(image)
 
         
