@@ -1,6 +1,13 @@
 import torch
 import torch.nn as nn
 
+class NSRT(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self,x):
+        return x
+
 class NSAbstractModel(nn.Module):
     def __init__(self):
         super().__init__()
