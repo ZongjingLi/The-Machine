@@ -21,7 +21,7 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
             pos_y = random_integers(0, height - 12)
             pos_x = random_integers(0, width - 12)
 
-            scale = random_integers(6, min(8, height-pos_y, width-pos_x))
+            scale = random_integers(6, min(6, height-pos_y, width-pos_x))
 
             cat = np.random.choice(cat_choice)
             sprite = np.zeros((height, width, 3))
@@ -45,6 +45,7 @@ def make_sprite3_dataset(n=60, height=64, width=64,split = "train"):
                 category_info["cube"] += 1
                 sprite[pos_x:pos_x + scale, pos_y:pos_y + scale, color_channel] = 1.0
             else:  # draw square turned by 45 degrees
+                scale += 1
                 category_info["diamond"] += 1
                 center_x = pos_x + scale // 2.0
                 center_y = pos_y + scale // 2.0

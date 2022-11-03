@@ -115,8 +115,8 @@ if __name__ == "__main__":
                              ConceptBox("diamond",ctype = "category",dim = 64),]),
         "dynamic_concepts":[],
         "relations":[]}
-    ebml = EBMLearner(config,sp3_concepts)
-    #ebml = torch.load("model_small.ckpt")
+    #ebml = EBMLearner(config,sp3_concepts)
+    ebml = torch.load("model_small.ckpt")
     #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 
