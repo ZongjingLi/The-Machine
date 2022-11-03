@@ -27,6 +27,6 @@ func = toFuncNode("exist(filter(scene(),red))")
 func_g = toNxGraph(func)
 
 print(func_g)
-nx.draw_networkx(func_g)
+nx.draw_spectral(func_g,with_labels = True)
 
 plt.show()
