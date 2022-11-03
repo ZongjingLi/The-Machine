@@ -5,9 +5,12 @@ from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator, RPNHead, RegionProposalNetwork
 import torch
 
+import torch.nn as nn
+
 anchor_generator = AnchorGenerator(sizes=tuple([(16, 32, 64, 128, 256) for _ in range(5)]), # let num of tuple equal to num of feature maps
                                   aspect_ratios=tuple([(0.75, 0.5, 1.25) for _ in range(5)])) # ref: https://github.com/pytorch/vision/issues/978
 rpn_head = RPNHead(256, anchor_generator.num_anchors_per_location()[0])
+
 
 
 RPNNet = RegionProposalNetwork(
@@ -23,3 +26,20 @@ RPNNet = RegionProposalNetwork(
 inputs = torch.randn([10,3,64,64])
 outputs = RPNNet(inputs)
 print(outputs.shape)
+
+class Model(nn.Module):
+    def __init__(self,n,m):
+        super().__init__()
+        self.F = nn.Linear(n,m)
+    def forward(self,x):return self.F(x)
+
+model = Model(1,1)
+optim = torch.optim.Adam(model.parameters(),lr = 2e-3)
+lf = torch.nn.MSELoss()
+x = 0
+for epoch in range(100):
+    y = model(x)
+    loss = lf(x,y)
+    loss.backward()
+    optim.step()
+    optim.zero_grad()

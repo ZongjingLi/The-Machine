@@ -76,6 +76,10 @@ def train_ebml(model,dataset,joint = False,visualize = False):
                 plt.imshow(im_neg.cpu().detach()[0].permute([1,2,0]))
                 plt.subplot(1,2,2);plt.cla()
                 plt.imshow(images.cpu()[0].permute([1,2,0]))
+
+                if isinstance(program,str):program = toFuncNode(program)
+                
+
                 plt.pause(0.0001)
             # if it is a joint training, add the reconstruction loss and energy loss from the ebm
 
