@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from dataloader import *
 from torch.utils.data import Dataset, DataLoader
+from utils import *
 
 def ground_results(results,answers):
     outputs = []
@@ -78,8 +79,9 @@ def train_ebml(model,dataset,joint = False,visualize = False):
                 plt.imshow(images.cpu()[0].permute([1,2,0]))
 
                 if isinstance(program,str):program = toFuncNode(program)
-                
-
+                plt.figure("program")
+                func_g = toNxGraph(program)
+                nx.draw_spectral(func_g,with_labels = True)
                 plt.pause(0.0001)
             # if it is a joint training, add the reconstruction loss and energy loss from the ebm
 
@@ -100,7 +102,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
         else:
             print("epoch: {} total_loss:{}".format(epoch,total_loss))
         plt.figure("namomo")
-        torch.save(model,"model_small.ckpt")
+        torch.save(model,"checkpoints/model_small.ckpt")
         plt.cla();plt.plot(loss_history);plt.pause(0.0001);
     plt.ioff()
     plt.show()
@@ -120,7 +122,7 @@ if __name__ == "__main__":
         "dynamic_concepts":[],
         "relations":[]}
     #ebml = EBMLearner(config,sp3_concepts)
-    ebml = torch.load("model_small.ckpt")
+    ebml = torch.load("checkpoints/model_small.ckpt")
     #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 

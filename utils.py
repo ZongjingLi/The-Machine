@@ -20,13 +20,3 @@ def toNxGraph(func):
     func_graph.add_nodes_from(nodes)
     func_graph.add_edges_from(edges)
     return func_graph
-    
-
-func = toFuncNode("exist(filter(scene(),red))")
-
-func_g = toNxGraph(func)
-
-print(func_g)
-nx.draw_spectral(func_g,with_labels = True)
-
-plt.show()
