@@ -462,7 +462,7 @@ parser.add_argument('--num_additional', default=0, type=int, help='Number of add
 
 parser.add_argument('--step_lr', default=500.0, type=float, help='step size of latents')
 
-parser.add_argument('--latent_dim', default=64, type=int, help='dimension of the latent')
+parser.add_argument('--latent_dim', default=100, type=int, help='dimension of the latent')
 parser.add_argument('--sample', action='store_true', help='generate negative samples through Langevin')
 parser.add_argument('--decoder', action='store_true', help='decoder for model')
 

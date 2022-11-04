@@ -22,7 +22,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
     from tqdm import tqdm
     optimizer = torch.optim.Adam(model.parameters(),lr = 2e-4)
 
-    trainloader = DataLoader(dataset,batch_size = 24,shuffle=True)
+    trainloader = DataLoader(dataset,batch_size = 64,shuffle=True)
     loss_history = [];plt.ion()
 
     if joint:
@@ -78,10 +78,12 @@ def train_ebml(model,dataset,joint = False,visualize = False):
                 plt.subplot(1,2,2);plt.cla()
                 plt.imshow(images.cpu()[0].permute([1,2,0]))
 
-                if isinstance(program,str):program = toFuncNode(program)
+                if isinstance(programs[0],str):programs= toFuncNode(programs[0])
                 plt.figure("program")
-                func_g = toNxGraph(program)
+                plt.cla()
+                func_g = toNxGraph(programs)
                 nx.draw_spectral(func_g,with_labels = True)
+                plt.text(-0.6,0.4,questions[0])
                 plt.pause(0.0001)
             # if it is a joint training, add the reconstruction loss and energy loss from the ebm
 
@@ -102,7 +104,7 @@ def train_ebml(model,dataset,joint = False,visualize = False):
         else:
             print("epoch: {} total_loss:{}".format(epoch,total_loss))
         plt.figure("namomo")
-        torch.save(model,"checkpoints/model_small.ckpt")
+        torch.save(model,"checkpoints/model100.ckpt")
         plt.cla();plt.plot(loss_history);plt.pause(0.0001);
     plt.ioff()
     plt.show()
@@ -113,16 +115,16 @@ if __name__ == "__main__":
 
     # create the energy-based meta-concept learner
     sp3_concepts =\
-        {"static_concepts" :nn.ModuleList([ConceptBox("red",  ctype = "color",dim = 64),
-                             ConceptBox("green",ctype = "color",dim = 64),
-                             ConceptBox("blue", ctype = "color",dim = 64),
-                             ConceptBox("cube",ctype = "category",dim = 64),
-                             ConceptBox("circle",ctype = "category",dim = 64),
-                             ConceptBox("diamond",ctype = "category",dim = 64),]),
+        {"static_concepts" :nn.ModuleList([ConceptBox("red",  ctype = "color",dim = config.concept_dim),
+                             ConceptBox("green",ctype = "color",dim = config.concept_dim),
+                             ConceptBox("blue", ctype = "color",dim = config.concept_dim),
+                             ConceptBox("cube",ctype = "category",dim = config.concept_dim),
+                             ConceptBox("circle",ctype = "category",dim = config.concept_dim),
+                             ConceptBox("diamond",ctype = "category",dim = config.concept_dim),]),
         "dynamic_concepts":[],
         "relations":[]}
-    #ebml = EBMLearner(config,sp3_concepts)
-    ebml = torch.load("checkpoints/model_small.ckpt")
+    ebml = EBMLearner(config,sp3_concepts)
+    #ebml = torch.load("checkpoints/model100.ckpt")
     #ebml.component_model = torch.load("comet.ckpt")
     sprite3dataset = Sprite3("train")
 
