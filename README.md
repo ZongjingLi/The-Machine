@@ -97,6 +97,53 @@ An input sequence composed of relational states: each column represents the stat
 ![](results/sprite_result_bg.png)
 Our model includes reasoning layers that implement finite-domain quantification over objects and time. The structure allows them to generalize directly to input instances with varying numbers of objects in temporal sequences of varying lengths. We evaluate TOQ-Nets on input domains that require recognizing event-types in terms of complex temporal relational patterns. We demonstrate that TOQ-Nets can generalize from small amounts of data to scenarios containing more objects than were present during training and to temporal warpings of input sequences.
 
+Random 							29.7 51.9 22.6 49.7 9.1
+Frequent 							30.9 56.2 25.7 50.3 8.7
+Blind-LSTM 						39.0 57.9 28.7 55.7 12.5
+CNN-LSTM (Antol et al., 2015) 		46.6 59.5 29.8 58.6 14.6
+HCRN (Le et al., 2020) 				47.3 62.7 32.7 58.6 14.2
+MAC (Hudson & Manning, 2018) 		68.6 60.2 32.2 60.2 16.0
+ALOE (Ding et al., 2020)			 	54.3 65.9 35.2 65.4 20.8
+CNN-LSTM (Ref) (Antol et al., 2015) 	41.9 59.6 29.4 57.2 12.8
+MAC (Ref) (Hudson & Manning, 2018)   65.8 60.2 30.7 60.3 14.3
+ALOE (Ref) (Ding et al., 2020)		57.7 67.9 37.1 67.9 22.2
+TOQI Traj 						84.4		
+TOQI Conv						76.1
+Human Performance 				90.6 88.0 75.9 80.0 52.9
+
+
+
+Methods Factual Predictive Counterfactual
+per opt. per ques. per opt. per ques.
+CPL 80.5 75.3 56.4 68.3 29.1
+NS-DR+ - 73.3 50.8 61.1 16.6
+CPL-Gt   100 87.6 74.0 74.0 35.3
+
+
+- convolution feature or object based features
+- is toqi net a 
+CPL-OR   90.4 
+TQOI-T   87.4
+TOQI-C   76.1
+
+frame 32
+to object trajectory 
+
+to object conv - size 5 
+
+
+-visualization 
+max(x,dim = T)
+NxT
+scene: Nx1, NxNx1
+
+D[Scene()]
+
+mass = 5
+mass = 1
+
+v = p / (m * (p * 4 + 1))
+
 # Dynamic Scene Question Answering
 Our model includes reasoning layers that implement finite-domain quantification over objects and time. The structure allows them to generalize directly to input instances with varying numbers of objects in temporal sequences of varying lengths. We evaluate TOQ-Nets on input domains that require recognizing event-types in terms of complex temporal relational patterns. We demonstrate that TOQ-Nets can generalize from small amounts of data to scenarios containing more objects than were present during training and to temporal warpings of input sequences.
 ![](results/toqnet.png)
